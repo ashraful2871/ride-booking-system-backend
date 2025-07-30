@@ -6,6 +6,8 @@ import passport from "passport";
 import AppError from "../../errorHelper/appError";
 import { sendResponse } from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import { createUserToken } from "../../utils/userToken";
+import { setAuthCookie } from "../../utils/setAuthCookie.";
 
 const credentialLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -17,13 +19,19 @@ const credentialLogin = catchAsync(
         return next(new AppError(401, info.message));
       }
 
+      const userToken = createUserToken(user);
       const { password, ...rest } = user.toObject();
+      setAuthCookie(res, userToken);
 
       sendResponse(res, {
         success: true,
         statusCode: StatusCodes.CREATED,
         message: "User Login Successfully",
-        data: rest,
+        data: {
+          accessToken: userToken.accessToken,
+          refreshToken: userToken.refreshToken,
+          user: rest,
+        },
       });
     })(req, res, next);
   }
