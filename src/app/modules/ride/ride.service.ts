@@ -1,0 +1,48 @@
+import { StatusCodes } from "http-status-codes";
+import AppError from "../../errorHelper/appError";
+import { IRide, RideStatus } from "./ride.interface";
+import { Ride } from "./ride.model";
+import { User } from "../user/user.model";
+import { Types } from "mongoose";
+
+const createRide = async (payload: Partial<IRide>) => {
+  const rider = await User.findOne({ _id: payload.rider });
+
+  if (!rider) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "rider not found");
+  }
+  const newRide = await Ride.create(payload);
+
+  return newRide;
+};
+const acceptRideByDrier = async (rideId: string, driverId: string) => {
+  const ride = await Ride.findById(rideId);
+  if (!ride) {
+    throw new AppError(StatusCodes.NOT_FOUND, "ride not found");
+  }
+  if (ride.status !== RideStatus.PENDING) {
+    throw new AppError(
+      StatusCodes.NOT_FOUND,
+      "Ride is not available to accept"
+    );
+  }
+
+  if (ride.driver) {
+    throw new AppError(
+      StatusCodes.NOT_FOUND,
+      "Ride is already taken by another driver"
+    );
+  }
+
+  ride.driver = new Types.ObjectId(driverId);
+  ride.status = RideStatus.ACCEPTED;
+  ride.acceptedAt = new Date();
+  await ride.save();
+
+  return ride;
+};
+
+export const rideServices = {
+  createRide,
+  acceptRideByDrier,
+};
