@@ -6,10 +6,9 @@ export enum IsActive {
   Blocked = "BLOCKED",
 }
 export enum Role {
-  SUPER_ADMIN = "SUPER_ADMIN",
-  USER = "USER",
   RIDER = "RIDER",
   DRIVER = "DRIVER",
+  SUPER_ADMIN = "SUPER_ADMIN",
 }
 
 export interface IAuthProvider {

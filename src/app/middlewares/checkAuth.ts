@@ -40,7 +40,9 @@ export const checkAuth =
       //   if (!isUserExist) {
       //     throw new AppError(StatusCodes.BAD_REQUEST, "user is deleted");
       //   }
+      console.log(verifiedToken);
       if (!authRoles.includes(verifiedToken.role)) {
+        console.log("in if block", verifiedToken);
         throw new AppError(405, "you are not permitted view this route");
       }
 
