@@ -20,6 +20,20 @@ const applyDriver = catchAsync(
   }
 );
 
+const viewEarningsHistory = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId: driverUserId } = req.user as JwtPayload;
+    const earnings = await driverServices.viewEarningsHistory(driverUserId);
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "Earnings history retrieved Successfully",
+      data: earnings,
+    });
+  }
+);
+
 export const driverController = {
   applyDriver,
+  viewEarningsHistory,
 };

@@ -10,5 +10,10 @@ router.post(
   checkAuth(...Object.values(Role)),
   driverController.applyDriver
 );
+router.get(
+  "/earnings",
+  checkAuth(Role.DRIVER),
+  driverController.viewEarningsHistory
+);
 
 export const driverRoutes = router;
