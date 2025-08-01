@@ -5,6 +5,7 @@ import { Ride } from "./ride.model";
 import { User } from "../user/user.model";
 import { Types } from "mongoose";
 import { Driver } from "../driver/driver.mode";
+import { DriverApproveStatus } from "../driver/driver.interface";
 
 const CANCEL_TIME = 10;
 
@@ -155,6 +156,22 @@ const updateRideStatus = async (
   await ride.save();
   return ride;
 };
+const setOnlineStatus = async (driverUserId: string, IsOnline: boolean) => {
+  const driver = await Driver.findOne({
+    user: new Types.ObjectId(driverUserId),
+  });
+  if (!driver) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Driver Not Found");
+  }
+
+  if (driver.approvedStatus !== DriverApproveStatus.Approved) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Driver Is Not Approved");
+  }
+
+  driver.isOnline = IsOnline;
+  await driver.save();
+  return driver;
+};
 
 export const rideServices = {
   createRide,
@@ -162,4 +179,5 @@ export const rideServices = {
   cancelRide,
   rejectRide,
   updateRideStatus,
+  setOnlineStatus,
 };

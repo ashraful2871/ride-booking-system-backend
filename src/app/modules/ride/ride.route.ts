@@ -26,5 +26,10 @@ router.patch(
   checkAuth(Role.DRIVER),
   rideController.updateRideStatus
 );
+router.patch(
+  "/availability",
+  checkAuth(Role.DRIVER),
+  rideController.setOnlineStatus
+);
 
 export const rideRoute = router;

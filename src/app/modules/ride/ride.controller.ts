@@ -59,6 +59,7 @@ const rejectRide = catchAsync(
     });
   }
 );
+
 const updateRideStatus = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { rideId } = req.params;
@@ -77,6 +78,19 @@ const updateRideStatus = catchAsync(
     });
   }
 );
+const setOnlineStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { IsOnline } = req.body;
+    const { userId: driverUserId } = req.user as JwtPayload;
+    const driver = await rideServices.setOnlineStatus(driverUserId, IsOnline);
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "Availability updated",
+      data: driver,
+    });
+  }
+);
 
 export const rideController = {
   createRide,
@@ -84,4 +98,5 @@ export const rideController = {
   cancelRide,
   rejectRide,
   updateRideStatus,
+  setOnlineStatus,
 };
