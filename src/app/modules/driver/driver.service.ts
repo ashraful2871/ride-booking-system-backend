@@ -34,7 +34,6 @@ const viewEarningsHistory = async (driverUserId: string) => {
     driver: new Types.ObjectId(driverUserId),
     status: RideStatus.COMPLETED,
   });
-  console.log(rides);
 
   const totalEarningFromRides = rides.reduce(
     (sum, r) => sum + (r.fare || 0),
