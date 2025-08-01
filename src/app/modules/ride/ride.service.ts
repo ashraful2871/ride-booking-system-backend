@@ -4,6 +4,7 @@ import { IRide, RideStatus } from "./ride.interface";
 import { Ride } from "./ride.model";
 import { User } from "../user/user.model";
 import { Types } from "mongoose";
+import { Driver } from "../driver/driver.mode";
 
 const CANCEL_TIME = 10;
 
@@ -103,10 +104,62 @@ const rejectRide = async (rideId: string) => {
 
   return ride;
 };
+const updateRideStatus = async (
+  rideId: string,
+  driverUserId: string,
+  status: string
+) => {
+  const ride = await Ride.findById(rideId);
+  if (!ride) {
+    throw new AppError(StatusCodes.NOT_FOUND, "ride not found");
+  }
+
+  if (!ride.driver || ride.driver.toString() !== driverUserId) {
+    throw new AppError(
+      StatusCodes.FORBIDDEN,
+      "Your Are not Permitted To update this Status"
+    );
+  }
+  const allowedTransitions: Record<string, string[]> = {
+    [RideStatus.ACCEPTED]: [RideStatus.PICKED_UP],
+    [RideStatus.PICKED_UP]: [RideStatus.IN_PROGRESS],
+    [RideStatus.IN_PROGRESS]: [RideStatus.COMPLETED],
+  };
+  if (
+    !(ride.status in allowedTransitions) ||
+    !allowedTransitions[ride.status].includes(status)
+  ) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      `Can't transit from ${ride.status} to ${status}`
+    );
+  }
+
+  ride.status = status as RideStatus;
+  if (status === RideStatus.PICKED_UP) {
+    ride.pickedUpAt = new Date();
+  }
+  if (ride.status === RideStatus.COMPLETED) {
+    ride.completedAt = new Date();
+
+    if (ride.driver) {
+      await Driver.findOneAndUpdate(
+        { user: new Types.ObjectId(driverUserId) },
+        {
+          $inc: { totalEarning: ride.fare || 0 },
+          $set: { currentRideId: null },
+        }
+      );
+    }
+  }
+  await ride.save();
+  return ride;
+};
 
 export const rideServices = {
   createRide,
   acceptRideByDrier,
   cancelRide,
   rejectRide,
+  updateRideStatus,
 };

@@ -7,6 +7,7 @@ export enum RideStatus {
   COMPLETED = "COMPLETED",
   CANCELLED = "CANCELLED",
   REJECTED = "REJECTED",
+  PICKED_UP = "PICKED_UP",
 }
 
 export interface IRide {

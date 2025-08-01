@@ -21,5 +21,10 @@ router.patch(
   checkAuth(Role.RIDER),
   rideController.cancelRide
 );
+router.patch(
+  "/status/:rideId",
+  checkAuth(Role.DRIVER),
+  rideController.updateRideStatus
+);
 
 export const rideRoute = router;
