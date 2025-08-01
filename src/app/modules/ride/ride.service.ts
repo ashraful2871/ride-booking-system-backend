@@ -86,9 +86,27 @@ const cancelRide = async (rideId: string, riderId: string) => {
 
   return ride;
 };
+const rejectRide = async (rideId: string) => {
+  const ride = await Ride.findById(rideId);
+  if (!ride) {
+    throw new AppError(StatusCodes.NOT_FOUND, "ride not found");
+  }
+
+  if (ride.status !== RideStatus.PENDING) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "Pending Eide Only can rejected"
+    );
+  }
+  ride.status = RideStatus.REJECTED;
+  await ride.save();
+
+  return ride;
+};
 
 export const rideServices = {
   createRide,
   acceptRideByDrier,
   cancelRide,
+  rejectRide,
 };

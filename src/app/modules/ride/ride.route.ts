@@ -12,6 +12,11 @@ router.patch(
   rideController.acceptRideByDrier
 );
 router.patch(
+  "/reject/:rideId",
+  checkAuth(Role.DRIVER),
+  rideController.rejectRide
+);
+router.patch(
   "/cancel/:rideId",
   checkAuth(Role.RIDER),
   rideController.cancelRide

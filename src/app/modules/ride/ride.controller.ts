@@ -46,9 +46,23 @@ const cancelRide = catchAsync(
     });
   }
 );
+const rejectRide = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { rideId } = req.params;
+    const { userId: driverUserId } = req.user as JwtPayload;
+    const ride = await rideServices.rejectRide(rideId);
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "Ride Rejected Successfully",
+      data: ride,
+    });
+  }
+);
 
 export const rideController = {
   createRide,
   acceptRideByDrier,
   cancelRide,
+  rejectRide,
 };
