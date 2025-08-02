@@ -5,6 +5,8 @@ import { Driver } from "./driver.mode";
 import { Types } from "mongoose";
 import { Ride } from "../ride/ride.model";
 import { RideStatus } from "../ride/ride.interface";
+import { Role } from "../user/user.interface";
+import { User } from "../user/user.model";
 
 const applyDriver = async (userId: string, payload: Partial<IDriver>) => {
   const existingDrive = await Driver.findOne({ user: userId });
@@ -161,6 +163,33 @@ const viewEarningsHistory = async (driverUserId: string) => {
   };
 };
 
+const getAllDriver = async () => {
+  const allRides = await Driver.find({}).sort({ createdAt: -1 });
+
+  return allRides;
+};
+
+const driverApprovedStatus = async (driverId: string) => {
+  const driver = await Driver.findById(driverId);
+  const user = await User.findById(driver?.user);
+  if (!driver) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Driver Not Found");
+  }
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "User Not Found");
+  }
+  if (driver.approvedStatus === DriverApproveStatus.Approved) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "Driver Already Approved");
+  }
+
+  driver.approvedStatus = DriverApproveStatus.Approved;
+  user.role = Role.DRIVER;
+
+  await driver.save();
+  await user.save();
+  return driver;
+};
+
 export const driverServices = {
   applyDriver,
   viewEarningsHistory,
@@ -168,4 +197,6 @@ export const driverServices = {
   setOnlineStatus,
   rejectRide,
   updateRideStatus,
+  getAllDriver,
+  driverApprovedStatus,
 };

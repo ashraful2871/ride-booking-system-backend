@@ -43,5 +43,15 @@ router.get(
   checkAuth(Role.DRIVER),
   driverController.viewEarningsHistory
 );
+router.get(
+  "/all-drivers",
+  checkAuth(Role.SUPER_ADMIN),
+  driverController.getAllDriver
+);
+router.patch(
+  "/driver-status/:driverId",
+  checkAuth(Role.SUPER_ADMIN),
+  driverController.driverApprovedStatus
+);
 
 export const driverRoutes = router;

@@ -93,6 +93,31 @@ const viewEarningsHistory = catchAsync(
   }
 );
 
+const getAllDriver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const driver = await driverServices.getAllDriver();
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "All Driver Retrieved successfully",
+      data: driver,
+    });
+  }
+);
+
+const driverApprovedStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { driverId } = req.params;
+    const driver = await driverServices.driverApprovedStatus(driverId);
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "Driver Status Approved successfully",
+      data: driver,
+    });
+  }
+);
+
 export const driverController = {
   applyDriver,
   viewEarningsHistory,
@@ -100,4 +125,6 @@ export const driverController = {
   setOnlineStatus,
   updateRideStatus,
   rejectRide,
+  getAllDriver,
+  driverApprovedStatus,
 };

@@ -106,9 +106,30 @@ const getAllRider = async () => {
   return allUsers;
 };
 
+const getAllRides = async () => {
+  const allRides = await Ride.find({}).sort({ createdAt: -1 });
+
+  return allRides;
+};
+const blockUser = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Driver Not Found");
+  }
+  if (user.isDeleted) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "User Already Blocked");
+  }
+
+  user.isDeleted = true;
+  await user.save();
+  return user;
+};
+
 export const rideServices = {
   createRide,
   cancelRide,
   viewRideHistory,
   getAllRider,
+  blockUser,
+  getAllRides,
 };

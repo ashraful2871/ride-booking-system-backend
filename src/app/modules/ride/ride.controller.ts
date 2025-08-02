@@ -58,9 +58,35 @@ const getAllRider = catchAsync(
   }
 );
 
+const getAllRides = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const rides = await rideServices.getAllRides();
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "All Ride Retrieved successfully",
+      data: rides,
+    });
+  }
+);
+const blockUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { userId } = req.params;
+    const driver = await rideServices.blockUser(userId);
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "User Blocked successfully",
+      data: driver,
+    });
+  }
+);
+
 export const rideController = {
   createRide,
   cancelRide,
   viewRideHistory,
   getAllRider,
+  getAllRides,
+  blockUser,
 };
