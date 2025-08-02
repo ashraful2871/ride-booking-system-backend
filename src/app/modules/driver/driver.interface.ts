@@ -6,6 +6,10 @@ export enum DriverApproveStatus {
   Suspended = "SUSPENDED",
 }
 
+export enum DriverAvailability {
+  AVAILABLE = "AVAILABLE",
+}
+
 export interface IDriver {
   _id?: Types.ObjectId;
   user: Types.ObjectId;

@@ -6,6 +6,10 @@ import { User } from "../user/user.model";
 import { Types } from "mongoose";
 import { Driver } from "../driver/driver.mode";
 import { DriverApproveStatus } from "../driver/driver.interface";
+import { haversineDistanceInKm } from "../../utils/distance";
+
+const BASE_FARE = 1.5;
+const PER_KM_RATE = 0.75;
 
 const CANCEL_TIME = 10;
 
@@ -15,7 +19,31 @@ const createRide = async (payload: Partial<IRide>) => {
   if (!rider) {
     throw new AppError(StatusCodes.BAD_REQUEST, "rider not found");
   }
-  const newRide = await Ride.create(payload);
+
+  if (
+    !payload.pickupLocation ||
+    !payload.destinationLocation ||
+    typeof payload.pickupLocation.lat !== "number" ||
+    typeof payload.pickupLocation.lng !== "number" ||
+    typeof payload.destinationLocation.lat !== "number" ||
+    typeof payload.destinationLocation.lng !== "number"
+  ) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "Invalid pickup or destination"
+    );
+  }
+
+  const distanceKm = haversineDistanceInKm(
+    payload.pickupLocation.lat,
+    payload.pickupLocation.lng,
+    payload.destinationLocation.lat,
+    payload.destinationLocation.lng
+  );
+
+  const fare = BASE_FARE + distanceKm * PER_KM_RATE;
+
+  const newRide = await Ride.create({ ...payload, fare });
 
   return newRide;
 };
