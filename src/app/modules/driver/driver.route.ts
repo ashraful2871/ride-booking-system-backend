@@ -49,9 +49,14 @@ router.get(
   driverController.getAllDriver
 );
 router.patch(
-  "/driver-status/:driverId",
+  "/approved-driver-status/:driverId",
   checkAuth(Role.SUPER_ADMIN),
   driverController.driverApprovedStatus
+);
+router.patch(
+  "/suspended-driver-status/:driverId",
+  checkAuth(Role.SUPER_ADMIN),
+  driverController.driverSuspendStatus
 );
 
 export const driverRoutes = router;

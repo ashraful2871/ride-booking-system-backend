@@ -117,6 +117,18 @@ const driverApprovedStatus = catchAsync(
     });
   }
 );
+const driverSuspendStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { driverId } = req.params;
+    const driver = await driverServices.driverSuspendStatus(driverId);
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "Driver Status Suspended",
+      data: driver,
+    });
+  }
+);
 
 export const driverController = {
   applyDriver,
@@ -127,4 +139,5 @@ export const driverController = {
   rejectRide,
   getAllDriver,
   driverApprovedStatus,
+  driverSuspendStatus,
 };
