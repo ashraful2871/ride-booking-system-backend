@@ -5,7 +5,12 @@ import { Role } from "../user/user.interface";
 
 const router = Router();
 
-router.post("/book-ride", rideController.createRide);
+router.post("/book-ride", checkAuth(Role.RIDER), rideController.createRide);
+router.get(
+  "/view-ride-history",
+  checkAuth(Role.RIDER),
+  rideController.viewRideHistory
+);
 router.patch(
   "/accept/:rideId",
   checkAuth(Role.DRIVER),

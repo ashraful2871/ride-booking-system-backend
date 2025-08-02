@@ -200,6 +200,15 @@ const setOnlineStatus = async (driverUserId: string, IsOnline: boolean) => {
   await driver.save();
   return driver;
 };
+const viewRideHistory = async (userId: string) => {
+  const rideHistory = await Ride.find({ rider: new Types.ObjectId(userId) });
+
+  if (!rideHistory) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Ride History Not Found");
+  }
+
+  return rideHistory;
+};
 
 export const rideServices = {
   createRide,
@@ -208,4 +217,5 @@ export const rideServices = {
   rejectRide,
   updateRideStatus,
   setOnlineStatus,
+  viewRideHistory,
 };

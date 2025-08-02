@@ -5,11 +5,7 @@ import { Role } from "../user/user.interface";
 
 const router = Router();
 
-router.post(
-  "/register",
-  checkAuth(...Object.values(Role)),
-  driverController.applyDriver
-);
+router.post("/register", checkAuth(Role.RIDER), driverController.applyDriver);
 router.get(
   "/earnings",
   checkAuth(Role.DRIVER),
