@@ -5,6 +5,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import { adminServices } from "./admin.service";
 
+/////////////////////////////////
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const users = await adminServices.getAllUsers();
@@ -16,6 +17,7 @@ const getAllUsers = catchAsync(
     });
   }
 );
+
 const getAllRides = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const rides = await adminServices.getAllRides();

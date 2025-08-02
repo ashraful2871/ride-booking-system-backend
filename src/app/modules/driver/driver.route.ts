@@ -13,6 +13,31 @@ router.post(
   validateRequest(applyDriverZodSchema),
   driverController.applyDriver
 );
+
+router.patch(
+  "/accept/:rideId",
+  checkAuth(Role.DRIVER),
+  driverController.acceptRideByDrier
+);
+
+router.patch(
+  "/availability",
+  checkAuth(Role.DRIVER),
+  driverController.setOnlineStatus
+);
+
+router.patch(
+  "/status/:rideId",
+  checkAuth(Role.DRIVER),
+  driverController.updateRideStatus
+);
+
+router.patch(
+  "/reject/:rideId",
+  checkAuth(Role.DRIVER),
+  driverController.rejectRide
+);
+
 router.get(
   "/earnings",
   checkAuth(Role.DRIVER),

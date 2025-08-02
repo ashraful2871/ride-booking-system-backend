@@ -19,20 +19,6 @@ const createRide = catchAsync(
   }
 );
 
-const acceptRideByDrier = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { rideId } = req.params;
-    const { userId: driverId } = req.user as JwtPayload;
-    const ride = await rideServices.acceptRideByDrier(rideId, driverId);
-    sendResponse(res, {
-      success: true,
-      statusCode: StatusCodes.CREATED,
-      message: "Ride Accepted Successfully",
-      data: ride,
-    });
-  }
-);
-
 const cancelRide = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { rideId } = req.params;
@@ -46,51 +32,7 @@ const cancelRide = catchAsync(
     });
   }
 );
-const rejectRide = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { rideId } = req.params;
-    const { userId: driverUserId } = req.user as JwtPayload;
-    const ride = await rideServices.rejectRide(rideId);
-    sendResponse(res, {
-      success: true,
-      statusCode: StatusCodes.CREATED,
-      message: "Ride Rejected Successfully",
-      data: ride,
-    });
-  }
-);
 
-const updateRideStatus = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { rideId } = req.params;
-    const { status } = req.body;
-    const { userId: driverUserId } = req.user as JwtPayload;
-    const ride = await rideServices.updateRideStatus(
-      rideId,
-      driverUserId,
-      status
-    );
-    sendResponse(res, {
-      success: true,
-      statusCode: StatusCodes.CREATED,
-      message: "Ride Status Update Successfully",
-      data: ride,
-    });
-  }
-);
-const setOnlineStatus = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { IsOnline } = req.body;
-    const { userId: driverUserId } = req.user as JwtPayload;
-    const driver = await rideServices.setOnlineStatus(driverUserId, IsOnline);
-    sendResponse(res, {
-      success: true,
-      statusCode: StatusCodes.CREATED,
-      message: "Availability updated",
-      data: driver,
-    });
-  }
-);
 const viewRideHistory = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.user as JwtPayload;
@@ -104,12 +46,21 @@ const viewRideHistory = catchAsync(
   }
 );
 
+const getAllRider = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const users = await rideServices.getAllRider();
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.CREATED,
+      message: "All user Retrieved successfully",
+      data: users,
+    });
+  }
+);
+
 export const rideController = {
   createRide,
-  acceptRideByDrier,
   cancelRide,
-  rejectRide,
-  updateRideStatus,
-  setOnlineStatus,
   viewRideHistory,
+  getAllRider,
 };

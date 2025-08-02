@@ -4,8 +4,6 @@ import { IRide, RideStatus } from "./ride.interface";
 import { Ride } from "./ride.model";
 import { User } from "../user/user.model";
 import { Types } from "mongoose";
-import { Driver } from "../driver/driver.mode";
-import { DriverApproveStatus } from "../driver/driver.interface";
 import { haversineDistanceInKm } from "../../utils/distance";
 
 const BASE_FARE = 1.5;
@@ -46,33 +44,6 @@ const createRide = async (payload: Partial<IRide>) => {
   const newRide = await Ride.create({ ...payload, fare });
 
   return newRide;
-};
-
-const acceptRideByDrier = async (rideId: string, driverId: string) => {
-  const ride = await Ride.findById(rideId);
-  if (!ride) {
-    throw new AppError(StatusCodes.NOT_FOUND, "ride not found");
-  }
-  if (ride.status !== RideStatus.PENDING) {
-    throw new AppError(
-      StatusCodes.NOT_FOUND,
-      "Ride is not available to accept"
-    );
-  }
-
-  if (ride.driver) {
-    throw new AppError(
-      StatusCodes.NOT_FOUND,
-      "Ride is already taken by another driver"
-    );
-  }
-
-  ride.driver = new Types.ObjectId(driverId);
-  ride.status = RideStatus.ACCEPTED;
-  ride.acceptedAt = new Date();
-  await ride.save();
-
-  return ride;
 };
 
 const cancelRide = async (rideId: string, riderId: string) => {
@@ -116,90 +87,7 @@ const cancelRide = async (rideId: string, riderId: string) => {
 
   return ride;
 };
-const rejectRide = async (rideId: string) => {
-  const ride = await Ride.findById(rideId);
-  if (!ride) {
-    throw new AppError(StatusCodes.NOT_FOUND, "ride not found");
-  }
 
-  if (ride.status !== RideStatus.PENDING) {
-    throw new AppError(
-      StatusCodes.BAD_REQUEST,
-      "Pending Eide Only can rejected"
-    );
-  }
-  ride.status = RideStatus.REJECTED;
-  await ride.save();
-
-  return ride;
-};
-const updateRideStatus = async (
-  rideId: string,
-  driverUserId: string,
-  status: string
-) => {
-  const ride = await Ride.findById(rideId);
-  if (!ride) {
-    throw new AppError(StatusCodes.NOT_FOUND, "ride not found");
-  }
-
-  if (!ride.driver || ride.driver.toString() !== driverUserId) {
-    throw new AppError(
-      StatusCodes.FORBIDDEN,
-      "Your Are not Permitted To update this Status"
-    );
-  }
-  const allowedTransitions: Record<string, string[]> = {
-    [RideStatus.ACCEPTED]: [RideStatus.PICKED_UP],
-    [RideStatus.PICKED_UP]: [RideStatus.IN_PROGRESS],
-    [RideStatus.IN_PROGRESS]: [RideStatus.COMPLETED],
-  };
-  if (
-    !(ride.status in allowedTransitions) ||
-    !allowedTransitions[ride.status].includes(status)
-  ) {
-    throw new AppError(
-      StatusCodes.BAD_REQUEST,
-      `Can't transit from ${ride.status} to ${status}`
-    );
-  }
-
-  ride.status = status as RideStatus;
-  if (status === RideStatus.PICKED_UP) {
-    ride.pickedUpAt = new Date();
-  }
-  if (ride.status === RideStatus.COMPLETED) {
-    ride.completedAt = new Date();
-
-    if (ride.driver) {
-      await Driver.findOneAndUpdate(
-        { user: new Types.ObjectId(driverUserId) },
-        {
-          $inc: { totalEarning: ride.fare || 0 },
-          $set: { currentRideId: null },
-        }
-      );
-    }
-  }
-  await ride.save();
-  return ride;
-};
-const setOnlineStatus = async (driverUserId: string, IsOnline: boolean) => {
-  const driver = await Driver.findOne({
-    user: new Types.ObjectId(driverUserId),
-  });
-  if (!driver) {
-    throw new AppError(StatusCodes.NOT_FOUND, "Driver Not Found");
-  }
-
-  if (driver.approvedStatus !== DriverApproveStatus.Approved) {
-    throw new AppError(StatusCodes.NOT_FOUND, "Driver Is Not Approved");
-  }
-
-  driver.isOnline = IsOnline;
-  await driver.save();
-  return driver;
-};
 const viewRideHistory = async (userId: string) => {
   const rideHistory = await Ride.find({ rider: new Types.ObjectId(userId) });
 
@@ -210,12 +98,17 @@ const viewRideHistory = async (userId: string) => {
   return rideHistory;
 };
 
+const getAllRider = async () => {
+  const allUsers = await User.find({})
+    .select("-password")
+    .sort({ createdAt: -1 });
+
+  return allUsers;
+};
+
 export const rideServices = {
   createRide,
-  acceptRideByDrier,
   cancelRide,
-  rejectRide,
-  updateRideStatus,
-  setOnlineStatus,
   viewRideHistory,
+  getAllRider,
 };

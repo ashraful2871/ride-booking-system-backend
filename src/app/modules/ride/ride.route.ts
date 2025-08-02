@@ -11,30 +11,17 @@ router.get(
   checkAuth(Role.RIDER),
   rideController.viewRideHistory
 );
-router.patch(
-  "/accept/:rideId",
-  checkAuth(Role.DRIVER),
-  rideController.acceptRideByDrier
+
+router.get(
+  "/all-rider",
+  checkAuth(Role.SUPER_ADMIN),
+  rideController.getAllRider
 );
-router.patch(
-  "/reject/:rideId",
-  checkAuth(Role.DRIVER),
-  rideController.rejectRide
-);
+
 router.patch(
   "/cancel/:rideId",
   checkAuth(Role.RIDER),
   rideController.cancelRide
-);
-router.patch(
-  "/status/:rideId",
-  checkAuth(Role.DRIVER),
-  rideController.updateRideStatus
-);
-router.patch(
-  "/availability",
-  checkAuth(Role.DRIVER),
-  rideController.setOnlineStatus
 );
 
 export const rideRoute = router;

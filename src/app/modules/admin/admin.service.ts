@@ -13,6 +13,7 @@ const getAllUsers = async () => {
 
   return allUsers;
 };
+
 const getAllRides = async () => {
   const allRides = await Ride.find({}).sort({ createdAt: -1 });
 
