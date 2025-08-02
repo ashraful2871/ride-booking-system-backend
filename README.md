@@ -122,19 +122,3 @@ Validation is enforced using [Zod](https://zod.dev/) for:
 This ensures data integrity and prevents invalid inputs from reaching the backend logic.
 
 ---
-
-## 🛠️ Troubleshooting
-
-- **Port already in use**: Make sure port `5000` is free or change it in your `.env`.
-- **MongoDB errors**: Ensure your `MONGO_URI` is valid and the database is running.
-- **Token issues**: Verify your `JWT_SECRET` matches what's used for token generation.
-
----
-
-## 📄 License
-
-This project is licensed under the ISC License.
-
----
-
-Let me know if you want to include example requests using `curl` or `Postman`, or if there's a frontend that should be documented as well.
