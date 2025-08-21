@@ -13,6 +13,7 @@ interface EnvConfig {
   JWT_REFRESH_EXPIRES: string;
   SUPER_ADMIN_EMAIL: string;
   SUPER_ADMIN_PASSWORD: string;
+  FRONTEND_URL: string;
 }
 
 const loadEnvVariable = (): EnvConfig => {
@@ -27,6 +28,7 @@ const loadEnvVariable = (): EnvConfig => {
     "JWT_REFRESH_EXPIRES",
     "SUPER_ADMIN_EMAIL",
     "SUPER_ADMIN_PASSWORD",
+    "FRONTEND_URL",
   ];
   requireEnvVariable.forEach((key) => {
     if (!process.env[key]) {
@@ -45,6 +47,7 @@ const loadEnvVariable = (): EnvConfig => {
     JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES as string,
     SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
     SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
   };
 };
 

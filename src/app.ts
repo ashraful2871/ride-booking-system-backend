@@ -1,10 +1,18 @@
+import cors from "cors";
 import express, { Request, Response } from "express";
 import { router } from "./app/routes";
 import passport from "passport";
 import "./app/config/passport";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
+import { envVars } from "./app/config/env";
 const app = express();
+app.use(
+  cors({
+    origin: envVars.FRONTEND_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(passport.initialize());
 
