@@ -6,6 +6,7 @@ import "./app/config/passport";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import { envVars } from "./app/config/env";
+import cookieParser from "cookie-parser";
 const app = express();
 app.use(
   cors({
@@ -15,7 +16,7 @@ app.use(
 );
 app.use(express.json());
 app.use(passport.initialize());
-
+app.use(cookieParser());
 app.use("/api/v1", router);
 
 app.get("/", async (req: Request, res: Response) => {
