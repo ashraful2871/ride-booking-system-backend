@@ -19,7 +19,7 @@ router.get(
 );
 router.get(
   "/all-rides",
-  checkAuth(Role.SUPER_ADMIN),
+  checkAuth(Role.SUPER_ADMIN, Role.DRIVER),
   rideController.getAllRides
 );
 
