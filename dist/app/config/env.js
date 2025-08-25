@@ -18,6 +18,7 @@ const loadEnvVariable = () => {
         "JWT_REFRESH_EXPIRES",
         "SUPER_ADMIN_EMAIL",
         "SUPER_ADMIN_PASSWORD",
+        "FRONTEND_URL",
     ];
     requireEnvVariable.forEach((key) => {
         if (!process.env[key]) {
@@ -36,6 +37,7 @@ const loadEnvVariable = () => {
         JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES,
         SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL,
         SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD,
+        FRONTEND_URL: process.env.FRONTEND_URL,
     };
 };
 exports.envVars = loadEnvVariable();

@@ -5,13 +5,15 @@ const setAuthCookie = (res, tokenInfo) => {
     if (tokenInfo.accessToken) {
         res.cookie("access", tokenInfo.accessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
+            sameSite: "lax",
         });
     }
     if (tokenInfo.refreshToken) {
         res.cookie("refresh", tokenInfo.refreshToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
+            sameSite: "lax",
         });
     }
 };

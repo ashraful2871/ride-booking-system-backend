@@ -9,7 +9,7 @@ const router = (0, express_1.Router)();
 router.post("/book-ride", (0, checkAuth_1.checkAuth)(user_interface_1.Role.RIDER), ride_controller_1.rideController.createRide);
 router.get("/view-ride-history", (0, checkAuth_1.checkAuth)(user_interface_1.Role.RIDER), ride_controller_1.rideController.viewRideHistory);
 router.get("/all-rider", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN), ride_controller_1.rideController.getAllRider);
-router.get("/all-rides", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN), ride_controller_1.rideController.getAllRides);
+router.get("/all-rides", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN, user_interface_1.Role.DRIVER), ride_controller_1.rideController.getAllRides);
 router.patch("/cancel/:rideId", (0, checkAuth_1.checkAuth)(user_interface_1.Role.RIDER), ride_controller_1.rideController.cancelRide);
 router.patch("/block-user/:userId", (0, checkAuth_1.checkAuth)(user_interface_1.Role.SUPER_ADMIN), ride_controller_1.rideController.blockUser);
 exports.rideRoute = router;

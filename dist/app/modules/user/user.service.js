@@ -27,8 +27,14 @@ exports.userServices = void 0;
 const env_1 = require("../../config/env");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_model_1 = require("./user.model");
+const appError_1 = __importDefault(require("../../errorHelper/appError"));
+const http_status_codes_1 = require("http-status-codes");
 const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload, rest = __rest(payload, ["email", "password"]);
+    const isUserExist = yield user_model_1.User.findOne({ email: email });
+    if (isUserExist) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User Already Exist");
+    }
     const hasPassword = yield bcryptjs_1.default.hash(password, Number(env_1.envVars.BCRYPT_SALT_ROUND));
     const authProvider = {
         provider: "credentials",
@@ -37,6 +43,11 @@ const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.create(Object.assign({ email, password: hasPassword, auth: [authProvider] }, rest));
     return user;
 });
+const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield user_model_1.User.findById(userId).select("-password");
+    return user;
+});
 exports.userServices = {
     createUser,
+    getMe,
 };
