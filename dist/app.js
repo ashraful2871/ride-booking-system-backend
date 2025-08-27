@@ -19,11 +19,10 @@ const passport_1 = __importDefault(require("passport"));
 require("./app/config/passport");
 const globalErrorHandler_1 = require("./app/middlewares/globalErrorHandler");
 const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
-const env_1 = require("./app/config/env");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: env_1.envVars.FRONTEND_URL,
+    origin: ["http://localhost:5173", "https://ride-booking-a725a.web.app"],
     credentials: true,
 }));
 app.use(express_1.default.json());

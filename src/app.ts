@@ -10,11 +10,8 @@ import cookieParser from "cookie-parser";
 const app = express();
 app.use(
   cors({
-    origin: [
-      envVars.FRONTEND_URL,
-      "https://ride-booking-a725a.web.app",
-      "https://ride-booking-a725a.firebaseapp.com",
-    ],
+    origin: ["http://localhost:5173", "https://ride-booking-a725a.web.app"],
+
     credentials: true,
   })
 );

@@ -4,20 +4,24 @@ export interface AuthTokens {
   accessToken?: string;
   refreshToken?: string;
 }
-const isProduction = process.env.NODE_ENV === "production";
+
 export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
   if (tokenInfo.accessToken) {
     res.cookie("access", tokenInfo.accessToken, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+      secure: true,
+      sameSite: "none",
+      // domain: "ride-booking-a725a.web.app",
+      // path: "/",
     });
   }
   if (tokenInfo.refreshToken) {
     res.cookie("refresh", tokenInfo.refreshToken, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? "none" : "lax",
+      secure: true,
+      sameSite: "none",
+      // domain: "ride-booking-a725a.web.app",
+      // path: "/",
     });
   }
 };

@@ -6,14 +6,18 @@ const setAuthCookie = (res, tokenInfo) => {
         res.cookie("access", tokenInfo.accessToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "none",
+            // domain: "ride-booking-a725a.web.app",
+            // path: "/",
         });
     }
     if (tokenInfo.refreshToken) {
         res.cookie("refresh", tokenInfo.refreshToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "none",
+            // domain: "ride-booking-a725a.web.app",
+            // path: "/",
         });
     }
 };
