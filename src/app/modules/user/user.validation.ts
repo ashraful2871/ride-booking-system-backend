@@ -42,6 +42,7 @@ export const updateUSerZodSchema = z.object({
       message: "Password must contain at least 1 number.",
     })
     .optional(),
+  phone: z.string().min(11),
   role: z.enum(Object.values(Role) as [string]).optional(),
   isActive: z.enum(Object.values(IsActive) as [string]).optional(),
   isDeleted: z

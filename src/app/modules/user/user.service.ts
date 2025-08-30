@@ -4,6 +4,7 @@ import bcryptjs from "bcryptjs";
 import { User } from "./user.model";
 import AppError from "../../errorHelper/appError";
 import { StatusCodes } from "http-status-codes";
+
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, ...rest } = payload;
   const isUserExist = await User.findOne({ email: email });
@@ -28,6 +29,33 @@ const createUser = async (payload: Partial<IUser>) => {
   });
   return user;
 };
+
+const updateUserProfile = async (payload: Partial<IUser>, userid: string) => {
+  const { password, ...rest } = payload;
+
+  const isUserExist = await User.findOne({ _id: userid });
+  if (!isUserExist) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "User Not Found");
+  }
+
+  const updateData: Partial<IUser> = { ...rest };
+
+  if (password) {
+    updateData.password = await bcryptjs.hash(
+      password,
+      Number(envVars.BCRYPT_SALT_ROUND)
+    );
+  }
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: userid },
+    { $set: updateData },
+    { new: true, runValidators: true, projection: { password: 0 } }
+  );
+
+  return updatedUser;
+};
+
 const getMe = async (userId: string) => {
   const user = await User.findById(userId).select("-password");
   return user;
@@ -35,5 +63,6 @@ const getMe = async (userId: string) => {
 
 export const userServices = {
   createUser,
+  updateUserProfile,
   getMe,
 };
