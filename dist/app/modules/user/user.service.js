@@ -43,11 +43,25 @@ const createUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.create(Object.assign({ email, password: hasPassword, auth: [authProvider] }, rest));
     return user;
 });
+const updateUserProfile = (payload, userid) => __awaiter(void 0, void 0, void 0, function* () {
+    const { password } = payload, rest = __rest(payload, ["password"]);
+    const isUserExist = yield user_model_1.User.findOne({ _id: userid });
+    if (!isUserExist) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User Not Found");
+    }
+    const updateData = Object.assign({}, rest);
+    if (password) {
+        updateData.password = yield bcryptjs_1.default.hash(password, Number(env_1.envVars.BCRYPT_SALT_ROUND));
+    }
+    const updatedUser = yield user_model_1.User.findOneAndUpdate({ _id: userid }, { $set: updateData }, { new: true, runValidators: true, projection: { password: 0 } });
+    return updatedUser;
+});
 const getMe = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield user_model_1.User.findById(userId).select("-password");
     return user;
 });
 exports.userServices = {
     createUser,
+    updateUserProfile,
     getMe,
 };

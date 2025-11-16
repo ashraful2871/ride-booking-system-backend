@@ -5,7 +5,6 @@ import passport from "passport";
 import "./app/config/passport";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
-import { envVars } from "./app/config/env";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(

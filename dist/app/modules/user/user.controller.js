@@ -24,6 +24,17 @@ const createUser = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(vo
         data: user,
     });
 }));
+const updateUserProfile = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const userId = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.userId;
+    const user = yield user_service_1.userServices.updateUserProfile(req.body, userId);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        message: "Profile Updated Successfully",
+        data: user,
+    });
+}));
 const getMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const decodedToken = req.user;
     const result = yield user_service_1.userServices.getMe(decodedToken.userId);
@@ -36,5 +47,6 @@ const getMe = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(void 0,
 }));
 exports.userController = {
     createUser,
+    updateUserProfile,
     getMe,
 };

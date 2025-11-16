@@ -9,5 +9,6 @@ const checkAuth_1 = require("../../middlewares/checkAuth");
 const user_interface_1 = require("./user.interface");
 const router = (0, express_1.Router)();
 router.post("/register", (0, validateRequest_1.validateRequest)(user_validation_1.createUSerZodSchema), user_controller_1.userController.createUser);
+router.patch("/update-profile", (0, checkAuth_1.checkAuth)(...Object.values(user_interface_1.Role)), (0, validateRequest_1.validateRequest)(user_validation_1.updateUSerZodSchema), user_controller_1.userController.updateUserProfile);
 router.get("/me", (0, checkAuth_1.checkAuth)(...Object.values(user_interface_1.Role)), user_controller_1.userController.getMe);
 exports.userRoute = router;

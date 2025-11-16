@@ -14,6 +14,7 @@ const userSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String },
+    phone: { type: String },
     role: {
         type: String,
         enum: Object.values(user_interface_1.Role),

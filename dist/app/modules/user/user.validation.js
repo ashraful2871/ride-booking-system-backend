@@ -45,6 +45,7 @@ exports.updateUSerZodSchema = zod_1.default.object({
         message: "Password must contain at least 1 number.",
     })
         .optional(),
+    phone: zod_1.default.string().min(11),
     role: zod_1.default.enum(Object.values(user_interface_1.Role)).optional(),
     isActive: zod_1.default.enum(Object.values(user_interface_1.IsActive)).optional(),
     isDeleted: zod_1.default
